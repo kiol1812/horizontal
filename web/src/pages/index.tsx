@@ -2,6 +2,7 @@
 import Head from "next/head";
 // import { useState } from "react";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 import { getClient } from "@/prismaClient/getClient";
 import { record } from "@/types/enumTypes";
@@ -11,8 +12,9 @@ export async function getServerSideProps() {
     return {
         props:{
             records: records
-        }
-    }
+        },
+        // revalidate: 2.5,
+    };
 }
 
 import CircleContainer from "@/component/circle";
@@ -25,6 +27,13 @@ export default function Home({
 }:{
     records:record[]
 }){
+    useEffect(()=>{
+      const id = setInterval(async ()=>{
+        window.location.reload();
+      }, 2500);
+      return ()=>clearInterval(id);
+    }, []);
+
     const router = useRouter();
     const refreshData = () => {
       // router.replace(router.asPath);
