@@ -1,0 +1,21 @@
+.pointFont {
+    background-color: #394D5F;
+    color: #FEF9E6;
+}
+.shadow {
+    /* border: #394D5F 2px solid; */
+    /* background-color: #FEF9E6; */
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    filter: drop-shadow();
+    /* filter: drop-shadow(); */
+    box-shadow:
+        -10px -10px 30px #ffffff,
+        10px 10px 30px #394D5F66,
+        inset -10px -10px 10px #394D5F40,
+        inset 10px 10px 10px #ffffff;
+    /* box-shadow: inset -10px -10px 10px #0B132040; */
+    /* filter: drop-shadow(-10px -10px, 10px #0B1320); */
+    /* filter: drop-shadow(10px 10px 10px #FEF9E6); */
+}

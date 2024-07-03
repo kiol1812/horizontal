@@ -42,14 +42,14 @@ export default function Home({
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <>{
+        {/* <>{
             records.map((obj)=>(
                 <div key={obj.time}>
                     <p>{`${obj.offset_x}`}</p>
                     <p>{`${obj.offset_y}`}</p>
                 </div>
             ))
-        }</>
+        }</> */}
         <DashBoardContainer $width={800} $height={500}>
           <CircleContainer point={point} />
           <Chart records={records} />

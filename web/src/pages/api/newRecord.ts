@@ -11,7 +11,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(405).json({message:"Methon not allowed."});
     }
     // const userData = JSON.parse(req.body);
-    console.log(req.body); //type/text
+    // console.log(req.body); //type/text
     const data:string = req.body;
     const splited = data.split(',');
     const Record:record = {
