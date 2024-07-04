@@ -22,12 +22,15 @@ import { DashBoardContainer } from "@/component/dashBoard";
 import { point } from "@/types/enumTypes";
 import Chart from "@/component/Chart";
 
+import Main from "@/component/Main";
+import useMedia from "@/Hooks/useMedia";
+
 export default function Home({
     records
 }:{
     records:record[]
 }){
-    useEffect(()=>{
+    useEffect(()=>{ //要用到再開 <- auto-refresh
       const id = setInterval(async ()=>{
         window.location.reload();
       }, 2500);
@@ -43,6 +46,8 @@ export default function Home({
       x: records.at(records.length-1)?.offset_x||0, //last
       y: records.at(records.length-1)?.offset_y||0,
     }
+
+    const { isMobile, isTablet, isDesktop } = useMedia();
     return (
       <>
         <Head>
@@ -51,19 +56,13 @@ export default function Home({
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        {/* <>{
-            records.map((obj)=>(
-                <div key={obj.time}>
-                    <p>{`${obj.offset_x}`}</p>
-                    <p>{`${obj.offset_y}`}</p>
-                </div>
-            ))
-        }</> */}
-        <DashBoardContainer $width={800} $height={500}>
-          <CircleContainer point={point} />
-          <Chart records={records} />
-        </DashBoardContainer>
-        <button onClick={refreshData}>refresh</button>
+        <Main>
+          <DashBoardContainer $width={isMobile?400:isTablet?600:800} $height={500}>
+            <CircleContainer point={point} />
+            {isDesktop?(<Chart records={records} />):(<></>)}
+          </DashBoardContainer>
+          <button onClick={refreshData}>refresh</button>
+        </Main>
       </>
     );
 }

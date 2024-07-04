@@ -50,13 +50,13 @@ export default function Chart({
 }:{
     records: record[]
 }){
-    return (
+    return ( //have warning here, but I could seen where have no-key problem. maybe <></>? 等優化再來解決
         <ChartContainer $width={450} $height={250}>{
             records.length<=10?(
                 records.map((obj)=>(
                     <OneRecord key={obj.time} $height={obj.offset_x+125}>
-                        <RecordPoint>
-                            <p className={styles.pointFont}>{`${obj.offset_x}`}</p>
+                        <RecordPoint key={obj.time}>
+                            <p key={obj.time} className={styles.pointFont}>{`${obj.offset_x}`}</p>
                         </RecordPoint>
                     </OneRecord>
                 ))
@@ -64,8 +64,8 @@ export default function Chart({
                 records.map((obj)=>(
                     obj.time+10>records.length?(
                         <OneRecord key={obj.time} $height={obj.offset_x+125}>
-                            <RecordPoint>
-                                <p className={styles.pointFont}>{`${obj.offset_x}`}</p>
+                            <RecordPoint key={obj.time}>
+                                <p key={obj.time} className={styles.pointFont}>{`${obj.offset_x}`}</p>
                             </RecordPoint>
                         </OneRecord>
                     ):<></>
