@@ -25,6 +25,8 @@ import Chart from "@/component/Chart";
 import Main from "@/component/Main";
 import useMedia from "@/Hooks/useMedia";
 
+// const { exec, spawn } = require('node:child_process');
+// import { exec, spawn, fork } from "child_process";
 export default function Home({
     records
 }:{
@@ -62,6 +64,7 @@ export default function Home({
             {isDesktop?(<Chart records={records} />):(<></>)}
           </DashBoardContainer>
           <button onClick={refreshData}>refresh</button>
+          {/* <button onClick={handleClick}>refresh</button> */}
         </Main>
       </>
     );

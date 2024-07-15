@@ -40,7 +40,7 @@ export default function Main({
     return (
         <MainContainer>
             <TtileBar>
-                <Title>Title</Title>
+                <Title>dash board</Title>
             </TtileBar>
             <Center_when_Desktop>
                 {children}

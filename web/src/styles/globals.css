@@ -9,3 +9,8 @@
 body {
   background-color: #F0F0F3;
 }
+
+/* ignore error message, but all react stuff will gone */
+/* nextjs-portal { 
+  display: none;
+} */
