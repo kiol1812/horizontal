@@ -1,3 +1,6 @@
+# 環境直接用 > 3.11.2 64-bit，open3d直接開在pythen.exe位置:
+# pip install open3d
+
 import socket
 import struct
 import sys
@@ -60,9 +63,10 @@ def tcp_server():
         timestamp = str(round(time.time_ns() * 100))  # hundred of nanoseconds
 
         assert len(data) >= 5
-        header = data[0:1].decode('utf-8')
+        header = data[0:1].decode('utf-8', errors='ignore')
+        # print(header)
         data_length = struct.unpack(">i", data[1:5])[0]  # data length
-        # print(f"[{header}] {data_length}")
+        print(f"[{header}] {data_length}")
 
         frame_counts[header] += 1
         current_time = time.time()
