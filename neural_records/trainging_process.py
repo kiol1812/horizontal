@@ -1,8 +1,16 @@
-# 2024/08/05
+# train.py update output format, 可輸出小數點第一位，以及負數
+# 2024/08/07
 
 import numpy as np
 import pandas as pd
 
+# format output
+extend = 10 # 10 mean save 1 float point, 100 to save 2, ...
+offset = 12*extend # 12 is max value of data set, 
+                   # it will be set 7,  because if angle > 7, it will not use neural to compute
+layout = offset*2
+
+print("load data set")
 data = pd.read_csv("output/dataset.csv")
 # print(data)
 data = np.array(data)
@@ -11,22 +19,34 @@ np.random.shuffle(data)
 
 # data set size is 100
 data_train = data[10:m].T #0~9: test, 10~99:train
-Y_train = data_train[1] # labels
-Y_train = Y_train.astype(int) # this may go wrong
+Y_train = data_train[1]*extend # labels, *extend to each item
+# print("Y_train, before astype int: ", Y_train)
+Y_train = Y_train.astype(int)+offset # direct to add offset to labels
+print("Y_train, after astype int: ", Y_train)
 X_train = data_train[2:n]
 X_train = X_train/255
 _, m_train = X_train.shape
 
-
-def init_params(): # still not sure.
-    layout_size = 12 # is 12, because it is max+1 of Y, 
-				     # refer to one_hot() > np.zeros((Y.size, Y.max() + 1))
+def init_params():
+    # change layout size to combine negative and float point number
+    # layout_size was 12, because Y.max()+1 = 12
+    layout_size = layout 
     frame_expended_size = 16800
     W1 = np.random.rand(layout_size, frame_expended_size) - 0.5
     b1 = np.random.rand(layout_size, 1) - 0.5
     W2 = np.random.rand(layout_size, layout_size) - 0.5
     b2 = np.random.rand(layout_size, 1) - 0.5
     return W1, b1, W2, b2
+def load_params():
+    W1 = pd.read_csv("train/W1.csv")
+    W1 = np.array(W1)
+    b1 = pd.read_csv("train/b1.csv")
+    b1 = np.array(b1)
+    W2 = pd.read_csv("train/W2.csv")
+    W2 = np.array(W2)
+    b2 = pd.read_csv("train/b2.csv")
+    b2 = np.array(b2)
+    return W1[:, 1:], b1[:, 1:], W2[:, 1:], b2[:, 1:]
 
 def ReLU(Z):
     return np.maximum(Z, 0)
@@ -46,8 +66,8 @@ def ReLU_deriv(Z):
     return Z > 0
 
 def one_hot(Y):
-    one_hot_Y = np.zeros((Y.size, Y.max() + 1))
-    # one_hot_Y = np.zeros((Y.size, 100))
+    # one_hot_Y = np.zeros((Y.size, Y.max() + 1))
+    one_hot_Y = np.zeros((Y.size, layout)) # (original Y.max()+1)*100
     one_hot_Y[np.arange(Y.size), Y] = 1
     one_hot_Y = one_hot_Y.T
     return one_hot_Y
@@ -79,8 +99,8 @@ def get_accuracy(predictions, Y):
     return np.sum(predictions == Y) / Y.size
 
 def gradient_descent(X, Y, alpha, iterations):
-    W1, b1, W2, b2 = init_params()
-    # W1, b1, W2, b2 = load_params()
+    # W1, b1, W2, b2 = init_params()
+    W1, b1, W2, b2 = load_params()
     for i in range(iterations):
         Z1, A1, Z2, A2 = forward_prop(W1, b1, W2, b2, X)
         dW1, db1, dW2, db2 = backward_prop(Z1, A1, Z2, A2, W1, W2, X, Y)
@@ -102,12 +122,13 @@ def make_predictions(X, W1, b1, W2, b2):
 
 def test_prediction(index, W1, b1, W2, b2):
     # current_image = X_train[:, index, None]
+    # print("X train shape: ",  X_train[:, index, None].shape)
     prediction = make_predictions(X_train[:, index, None], W1, b1, W2, b2)
     label = Y_train[index]
-    print("Prediction: ", prediction)
-    print("Label: ", label)
+    print("Prediction: ", (prediction-offset)/extend)
+    print("Label: ", (label-offset)/extend)
 
-# run function
+# # run function
 print("start to training params ")
 W1, b1, W2, b2 = gradient_descent(X_train, Y_train, 0.05, 500)
 print("end of training.")
