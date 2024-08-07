@@ -1,6 +1,6 @@
 'use client'
 import Head from "next/head";
-// import { useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
@@ -27,17 +27,20 @@ import useMedia from "@/Hooks/useMedia";
 
 // const { exec, spawn } = require('node:child_process');
 // import { exec, spawn, fork } from "child_process";
+
+import Alert from "@/component/Alert";
+
 export default function Home({
     records
 }:{
     records:record[]
 }){
-    useEffect(()=>{ //要用到再開 <- auto-refresh
-      const id = setInterval(async ()=>{
-        window.location.reload();
-      }, 2500);
-      return ()=>clearInterval(id);
-    }, []);
+    // useEffect(()=>{ //要用到再開 <- auto-refresh
+    //   const id = setInterval(async ()=>{
+    //     window.location.reload();
+    //   }, 2500);
+    //   return ()=>clearInterval(id);
+    // }, []);
 
     const router = useRouter();
     const refreshData = () => {
@@ -50,6 +53,8 @@ export default function Home({
     }
 
     const { isMobile, isTablet, isDesktop } = useMedia();
+
+    const [alertShow, setAlertShow] = useState<boolean>(false);
     return (
       <>
         <Head>
@@ -65,6 +70,8 @@ export default function Home({
           </DashBoardContainer>
           <button onClick={refreshData}>refresh</button>
           {/* <button onClick={handleClick}>refresh</button> */}
+          <Alert show={alertShow} onHide={()=>setAlertShow(false)} msg={"角度值大於安全範圍"} />
+          <button onClick={()=>setAlertShow(true)}>alert</button>
         </Main>
       </>
     );
